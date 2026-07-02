@@ -5,6 +5,7 @@ from collections import defaultdict
 from typing import Optional
 import anthropic
 from ..config import config
+from ..request_config import get_anthropic_api_key, ai_configured
 
 
 def parse_junit_xml(xml_content: str) -> dict[str, bool]:
@@ -52,13 +53,13 @@ def detect_flaky(runs: list[dict[str, bool]], threshold_low: float = 0.10, thres
 
 
 async def classify_root_causes(flaky_tests: list[dict]) -> list[dict]:
-    if not config.ai_configured or not flaky_tests:
+    if not ai_configured() or not flaky_tests:
         for t in flaky_tests:
             t["suspected_cause"] = "unknown — set ANTHROPIC_API_KEY for AI analysis"
             t["fix_suggestion"] = "Investigate timing, shared state, and external dependencies"
         return flaky_tests
 
-    client = anthropic.AsyncAnthropic(api_key=config.anthropic_api_key)
+    client = anthropic.AsyncAnthropic(api_key=get_anthropic_api_key())
     prompt = f"""You are a QA expert analyzing flaky tests. For each test below, suggest the most likely root cause and fix.
 
 Flaky tests:

@@ -3,6 +3,7 @@ from typing import Optional
 import anthropic
 from ._ai_utils import parse_json_response
 from ..config import config
+from ..request_config import get_anthropic_api_key, ai_configured
 from ..integrations import jira as jira_client
 
 
@@ -14,7 +15,7 @@ async def _ai_format_bug(
     logs: str,
     environment: str,
 ) -> dict:
-    if not config.ai_configured:
+    if not ai_configured():
         return {
             "summary": f"Test Failure: {test_failure[:100]}",
             "description": f"Test failed.\n\nLogs:\n{logs[:1000]}",
@@ -24,7 +25,7 @@ async def _ai_format_bug(
             "root_cause_hypothesis": "Unknown — set ANTHROPIC_API_KEY for AI analysis",
         }
 
-    client = anthropic.AsyncAnthropic(api_key=config.anthropic_api_key)
+    client = anthropic.AsyncAnthropic(api_key=get_anthropic_api_key())
     prompt = f"""You are a QA engineer creating a bug report. Format the following test failure into a structured bug report.
 
 TEST FAILURE:

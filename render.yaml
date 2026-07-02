@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: qaforge-mcp
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: MCP_TRANSPORT
+        value: http
+    healthCheckPath: /mcp

@@ -4,6 +4,7 @@ from typing import Optional
 import anthropic
 from ._ai_utils import parse_json_response
 from ..config import config
+from ..request_config import get_anthropic_api_key, ai_configured
 
 
 def _extract_changed_files(git_diff: str) -> list[dict]:
@@ -85,8 +86,8 @@ async def run(
         "high_risk_files": [r for r in risk_assessment if r["risk"] == "high"],
     }
 
-    if config.ai_configured:
-        client = anthropic.AsyncAnthropic(api_key=config.anthropic_api_key)
+    if ai_configured():
+        client = anthropic.AsyncAnthropic(api_key=get_anthropic_api_key())
         prompt = f"""You are a QA engineer performing regression impact analysis for a code change.
 
 PR Title: {pr_title or 'N/A'}

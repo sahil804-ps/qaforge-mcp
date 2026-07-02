@@ -3,6 +3,7 @@ from typing import Optional
 import anthropic
 from ._ai_utils import parse_json_response
 from ..config import config
+from ..request_config import get_anthropic_api_key, ai_configured
 from ..integrations.playwright_runner import run_axe_audit
 
 WCAG_IMPACT_SEVERITY = {
@@ -74,8 +75,8 @@ async def run(url: str, component_code: str = "") -> dict:
         "serious_count": sum(1 for v in formatted_violations if v["impact"] == "serious"),
     }
 
-    if config.ai_configured and formatted_violations:
-        client = anthropic.AsyncAnthropic(api_key=config.anthropic_api_key)
+    if ai_configured() and formatted_violations:
+        client = anthropic.AsyncAnthropic(api_key=get_anthropic_api_key())
         top_violations = formatted_violations[:5]
         msg = await client.messages.create(
             model=config.claude_model,

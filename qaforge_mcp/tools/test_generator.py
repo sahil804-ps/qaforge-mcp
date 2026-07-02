@@ -1,6 +1,7 @@
 import json
 import anthropic
 from ..config import config
+from ..request_config import get_anthropic_api_key, ai_configured
 from ._ai_utils import parse_json_response
 
 SYSTEM_PROMPT = """You are a senior QA engineer and test architect with 15+ years of experience.
@@ -43,14 +44,14 @@ Categories: functional, negative, edge, boundary, security, performance, integra
 
 
 async def run(spec_content: str, swagger_spec: str = "") -> dict:
-    if not config.ai_configured:
+    if not ai_configured():
         return {"error": "ANTHROPIC_API_KEY not set. Cannot run AI-powered test generation."}
 
     combined_spec = spec_content
     if swagger_spec:
         combined_spec += f"\n\n--- SWAGGER/OPENAPI SPEC ---\n{swagger_spec}"
 
-    client = anthropic.AsyncAnthropic(api_key=config.anthropic_api_key)
+    client = anthropic.AsyncAnthropic(api_key=get_anthropic_api_key())
     message = await client.messages.create(
         model=config.claude_model,
         max_tokens=8096,

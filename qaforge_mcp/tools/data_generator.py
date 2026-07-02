@@ -6,6 +6,7 @@ import anthropic
 from faker import Faker
 from ._ai_utils import parse_json_response
 from ..config import config
+from ..request_config import get_anthropic_api_key, ai_configured
 
 fake = Faker()
 
@@ -136,8 +137,8 @@ async def run(
     try:
         schema_dict = json.loads(schema)
     except json.JSONDecodeError:
-        if config.ai_configured:
-            client = anthropic.AsyncAnthropic(api_key=config.anthropic_api_key)
+        if ai_configured():
+            client = anthropic.AsyncAnthropic(api_key=get_anthropic_api_key())
             msg = await client.messages.create(
                 model=config.claude_model,
                 max_tokens=2048,

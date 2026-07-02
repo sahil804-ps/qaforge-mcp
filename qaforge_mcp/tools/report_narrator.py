@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 from typing import Optional
 import anthropic
 from ..config import config
+from ..request_config import get_anthropic_api_key, ai_configured
 from ..integrations import slack
 
 
@@ -86,8 +87,8 @@ async def run(
         if new_failures:
             regression_info += f" {len(new_failures)} NEW failures: {', '.join(new_failures[:5])}."
 
-    if config.ai_configured:
-        client = anthropic.AsyncAnthropic(api_key=config.anthropic_api_key)
+    if ai_configured():
+        client = anthropic.AsyncAnthropic(api_key=get_anthropic_api_key())
         prompt = f"""You are a QA lead writing a test report summary for stakeholders.
 
 Current run metrics:

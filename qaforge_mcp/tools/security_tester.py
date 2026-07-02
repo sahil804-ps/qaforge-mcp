@@ -3,6 +3,7 @@ import yaml
 import anthropic
 from ._ai_utils import parse_json_response
 from ..config import config
+from ..request_config import get_anthropic_api_key, ai_configured
 
 OWASP_PAYLOADS = {
     "sql_injection": [
@@ -170,8 +171,8 @@ async def run(swagger_spec: str = "", endpoint_url: str = "") -> dict:
         "k6_security_script": k6_script,
     }
 
-    if config.ai_configured:
-        client = anthropic.AsyncAnthropic(api_key=config.anthropic_api_key)
+    if ai_configured():
+        client = anthropic.AsyncAnthropic(api_key=get_anthropic_api_key())
         msg = await client.messages.create(
             model=config.claude_model,
             max_tokens=1024,

@@ -50,6 +50,21 @@ Add any of these to the same `-e` flags (or a `.env` file next to your working d
 
 Tools work without any of these configured — AI-dependent tools fall back to non-AI output, and Jira/Slack features simply no-op.
 
+## Remote connector (shared, hosted deployment)
+
+The default setup above runs the server locally (stdio) — one process per user. To expose QAForge MCP as a **remote HTTP connector** that multiple people can add via a single URL (e.g. in Claude.ai Settings → Connectors), deploy the included `Dockerfile` (e.g. on [Render](https://render.com) using `render.yaml`, or any Docker host) and set `MCP_TRANSPORT=http`.
+
+In this mode, the server does **not** use a shared `ANTHROPIC_API_KEY` — every caller must send their own key in the `X-Anthropic-Api-Key` request header, so nobody's usage is billed to the operator's account. Local stdio mode is unaffected and continues to use the `ANTHROPIC_API_KEY` env var as before.
+
+```bash
+docker build -t qaforge-mcp .
+docker run -p 8000:8000 -e MCP_TRANSPORT=http qaforge-mcp
+```
+
+Then add it in Claude as a custom connector pointing at `https://<your-host>/mcp`, with header `X-Anthropic-Api-Key: <your-own-key>`.
+
+**Note:** the Docker image only installs the Chromium Playwright browser to keep the image lean for free hosting tiers — `diff_browsers` will report Firefox/WebKit as failed on a hosted deployment. Run it locally (`pip install` path above) for full cross-browser diffing.
+
 ## Requirements
 
 - Python 3.11+
