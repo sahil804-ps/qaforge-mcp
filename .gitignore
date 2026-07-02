@@ -1,0 +1,8 @@
+.env
+.mcp.json
+__pycache__/
+*.pyc
+*.egg-info/
+qaforge_baselines.json
+.venv/
+venv/

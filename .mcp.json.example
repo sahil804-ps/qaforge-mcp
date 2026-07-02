@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "qaforge": {
+      "command": "python",
+      "args": ["-m", "qaforge_mcp"],
+      "env": {
+        "ANTHROPIC_API_KEY": "your-anthropic-api-key",
+        "JIRA_URL": "https://yourcompany.atlassian.net",
+        "JIRA_EMAIL": "your@email.com",
+        "JIRA_TOKEN": "your-jira-api-token",
+        "JIRA_PROJECT_KEY": "QA",
+        "SLACK_WEBHOOK": "https://hooks.slack.com/services/...",
+        "CLAUDE_MODEL": "claude-sonnet-4-6"
+      }
+    }
+  }
+}
