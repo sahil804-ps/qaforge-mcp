@@ -2,12 +2,14 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# k6 (static binary) for performance_baseline_mcp and the security k6 script
+# k6 for performance_baseline_mcp and the security k6 script (official apt repo).
+# Best-effort: if this fails, the build still succeeds and only that one tool degrades
+# (performance_baseline_mcp reports "k6 not installed" instead of crashing the server).
 RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates gnupg \
-    && curl -fsSL https://github.com/grafana/k6/releases/latest/download/k6-linux-amd64.tar.gz -o /tmp/k6.tar.gz \
-    && tar -xzf /tmp/k6.tar.gz -C /tmp \
-    && mv /tmp/k6-*/k6 /usr/local/bin/k6 \
-    && rm -rf /tmp/k6* \
+    && ( curl -fsSL https://dl.k6.io/key.gpg | gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg \
+         && echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" > /etc/apt/sources.list.d/k6.list \
+         && apt-get update && apt-get install -y --no-install-recommends k6 \
+         || echo "k6 install failed — continuing without it" ) \
     && rm -rf /var/lib/apt/lists/*
 
 COPY pyproject.toml README.md ./
