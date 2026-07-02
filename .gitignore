@@ -6,3 +6,5 @@ __pycache__/
 qaforge_baselines.json
 .venv/
 venv/
+dist/
+build/
