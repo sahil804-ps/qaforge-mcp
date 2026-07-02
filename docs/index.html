@@ -1,0 +1,543 @@
+<title>QAForge MCP</title>
+<style>
+  :root {
+    --bg: #12151b;
+    --panel: #181c24;
+    --panel-2: #1e232d;
+    --border: #2b3140;
+    --border-soft: #232936;
+    --ink: #edeae1;
+    --muted: #8b93a3;
+    --muted-dim: #5c6474;
+    --ember: #ff8a3d;
+    --ember-dim: #7a4a26;
+    --pass: #5fb88a;
+    --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    --serif: Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: var(--serif);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  ::selection { background: var(--ember); color: #12151b; }
+
+  /* ---------- top strip ---------- */
+
+  .topstrip {
+    border-bottom: 1px solid var(--border-soft);
+    background: #0f1218;
+  }
+
+  .topstrip .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--pass);
+    box-shadow: 0 0 0 3px rgba(95, 184, 138, 0.18);
+  }
+
+  .topstrip nav {
+    display: flex;
+    gap: 20px;
+  }
+
+  .topstrip nav a {
+    text-decoration: none;
+    color: var(--muted);
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+  }
+
+  .topstrip nav a:hover { color: var(--ink); border-color: var(--border); }
+
+  /* ---------- hero ---------- */
+
+  .hero {
+    padding: 76px 0 64px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ember);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 18px;
+    height: 1px;
+    background: var(--ember);
+    display: inline-block;
+  }
+
+  .wordmark {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: clamp(40px, 7vw, 68px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+
+  .wordmark .cursor {
+    display: inline-block;
+    width: 0.5ch;
+    background: var(--ember);
+    animation: blink 1.1s steps(1) infinite;
+    margin-left: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wordmark .cursor { animation: none; opacity: 1; }
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .badge-mcp {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--bg);
+    background: var(--ember);
+    padding: 2px 8px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 10px;
+    transform: translateY(-6px);
+  }
+
+  .lede {
+    font-family: var(--serif);
+    font-size: 19px;
+    color: var(--muted);
+    max-width: 62ch;
+    margin: 22px 0 0;
+  }
+
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    margin-top: 34px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: var(--ember);
+    color: #1a0f06;
+    border-color: var(--ember);
+    font-weight: 600;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+  }
+
+  .btn-ghost:hover { border-color: var(--muted); }
+
+  /* ---------- section shell ---------- */
+
+  section { padding: 56px 0; border-bottom: 1px solid var(--border-soft); }
+  section:last-of-type { border-bottom: none; }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .section-title {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .section-note {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted-dim);
+  }
+
+  /* ---------- manifest table ---------- */
+
+  .manifest {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .manifest-row {
+    display: grid;
+    grid-template-columns: 44px 210px 1fr;
+    gap: 18px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-soft);
+    align-items: baseline;
+  }
+
+  .manifest-row:last-child { border-bottom: none; }
+  .manifest-row:nth-child(odd) { background: var(--panel); }
+  .manifest-row:nth-child(even) { background: var(--panel-2); }
+
+  .m-id {
+    font-family: var(--mono);
+    color: var(--muted-dim);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .m-tool {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--ember);
+    word-break: break-word;
+  }
+
+  .m-desc {
+    font-family: var(--serif);
+    font-size: 15.5px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 640px) {
+    .manifest-row { grid-template-columns: 28px 1fr; }
+    .m-desc { grid-column: 1 / -1; padding-left: 28px; }
+  }
+
+  /* ---------- install lanes ---------- */
+
+  .lanes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 720px) { .lanes { grid-template-columns: 1fr; } }
+
+  .lane {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px;
+    background: var(--panel);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .lane-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pass);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lane-tag.hosted { color: var(--ember); }
+
+  .lane h3 {
+    font-family: var(--mono);
+    font-size: 18px;
+    margin: 0;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .lane p {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .code {
+    position: relative;
+    background: #0d0f14;
+    border: 1px solid var(--border-soft);
+    border-radius: 5px;
+    padding: 14px 44px 14px 16px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: #cdd3de;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .code .k { color: var(--muted-dim); }
+  .code .v { color: var(--ember); }
+
+  .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 5px 8px;
+    cursor: pointer;
+  }
+
+  .copy-btn:hover { color: var(--ink); border-color: var(--muted); }
+  .copy-btn.copied { color: var(--pass); border-color: var(--pass); }
+
+  .lane-foot {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--muted-dim);
+    border-top: 1px solid var(--border-soft);
+    padding-top: 12px;
+    margin-top: 2px;
+  }
+
+  /* ---------- footer ---------- */
+
+  footer .wrap {
+    padding: 40px 28px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .foot-links {
+    display: flex;
+    gap: 22px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+  }
+
+  .foot-links a { text-decoration: none; color: var(--muted); }
+  .foot-links a:hover { color: var(--ink); }
+
+  .foot-sig {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--muted-dim);
+    letter-spacing: 0.04em;
+  }
+</style>
+
+<div class="topstrip">
+  <div class="wrap">
+    <span class="status-chip"><span class="dot"></span>live &mdash; qaforge-mcp.onrender.com</span>
+    <nav>
+      <a href="https://github.com/sahil804-ps/qaforge-mcp">github</a>
+      <a href="https://pypi.org/project/qaforge-mcp/">pypi</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">MCP server &middot; 12 tools &middot; one connector</p>
+    <h1 class="wordmark">QAForge<span class="cursor">&nbsp;</span><span class="badge-mcp">MCP</span></h1>
+    <p class="lede">
+      The world's first all-in-one QA engineering server for <strong>Claude</strong>.
+      Test generation, security scans, flaky-test detection, accessibility audits, and performance
+      baselines &mdash; called from plain language, with no context-switching out of the chat.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#connect">Connect it to Claude &rarr;</a>
+      <a class="btn btn-ghost" href="https://github.com/sahil804-ps/qaforge-mcp">Read the source</a>
+    </div>
+  </div>
+</header>
+
+<section id="manifest">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="section-title">The manifest</p>
+      <p class="section-note">12 registered tools</p>
+    </div>
+    <div class="manifest" id="manifest-list"></div>
+  </div>
+</section>
+
+<section id="connect">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="section-title">Two ways in</p>
+      <p class="section-note">pick one &mdash; both register the same 12 tools</p>
+    </div>
+    <div class="lanes">
+      <div class="lane">
+        <span class="lane-tag"><span class="dot"></span>local &middot; stdio</span>
+        <h3>Run it on your machine</h3>
+        <p>Full cross-browser diffing (Chromium, Firefox, WebKit) and k6 load testing. One process per user.</p>
+        <div class="code" data-copy="pip install qaforge-mcp
+playwright install chromium firefox webkit">pip install <span class="v">qaforge-mcp</span>
+playwright install chromium firefox webkit<button class="copy-btn">copy</button></div>
+        <div class="code" data-copy="claude mcp add --scope user qaforge -e ANTHROPIC_API_KEY=your-key -- python -m qaforge_mcp"><span class="k">claude mcp add</span> --scope user qaforge \
+  -e ANTHROPIC_API_KEY=<span class="v">your-key</span> -- python -m qaforge_mcp<button class="copy-btn">copy</button></div>
+        <p class="lane-foot">uses your own ANTHROPIC_API_KEY env var</p>
+      </div>
+
+      <div class="lane">
+        <span class="lane-tag hosted"><span class="dot" style="background:var(--ember);box-shadow:0 0 0 3px rgba(255,138,61,.18)"></span>hosted &middot; connector</span>
+        <h3>Add the shared connector</h3>
+        <p>Nothing to install. Add it once in Claude's connector settings and bring your own key at request time.</p>
+        <div class="code" data-copy="https://qaforge-mcp.onrender.com/mcp">URL
+<span class="v">https://qaforge-mcp.onrender.com/mcp</span><button class="copy-btn">copy</button></div>
+        <div class="code" data-copy="X-Anthropic-Api-Key: your-key">Header
+<span class="v">X-Anthropic-Api-Key: your-key</span><button class="copy-btn">copy</button></div>
+        <p class="lane-foot">your key is sent per-request, never stored on the server</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="foot-sig">QAForge MCP &middot; MIT licensed</span>
+    <div class="foot-links">
+      <a href="https://github.com/sahil804-ps/qaforge-mcp">GitHub</a>
+      <a href="https://pypi.org/project/qaforge-mcp/">PyPI</a>
+      <a href="https://github.com/sahil804-ps/qaforge-mcp/blob/master/docs/QAForge-MCP-Setup-Guide.docx">Setup guide</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var tools = [
+      ["01", "generate_test_cases", "FRD/Swagger → numbered test cases with priority + coverage gaps"],
+      ["02", "detect_flaky_tests", "Statistical flaky-test detection across JUnit XML runs, AI root-cause"],
+      ["03", "generate_security_tests", "OWASP Top 10 Postman collection + k6 security script"],
+      ["04", "narrate_report", "JUnit/Allure report → stakeholder-ready narrative, optional Slack post"],
+      ["05", "diff_browsers", "Cross-browser (Chrome/Firefox/WebKit) diffing via Playwright"],
+      ["06", "ai_test_executor", "Executes structured test cases against a live URL"],
+      ["07", "bug_report_generator", "AI bug report + optional Jira ticket creation"],
+      ["08", "regression_impact_analyzer", "git diff → impacted test areas + risk levels"],
+      ["09", "accessibility_checker", "WCAG 2.1 audit via axe-core, AI fix suggestions"],
+      ["10", "performance_baseline_mcp", "k6 load test, P50–P99, baseline regression alerts"],
+      ["11", "environment_health_checker", "Pre-test service health checks, Slack alerts"],
+      ["12", "test_data_generator", "Faker-based test data + edge cases + blockchain fields"]
+    ];
+
+    var list = document.getElementById("manifest-list");
+    tools.forEach(function (t) {
+      var row = document.createElement("div");
+      row.className = "manifest-row";
+      row.innerHTML =
+        '<span class="m-id">' + t[0] + '</span>' +
+        '<span class="m-tool">' + t[1] + '</span>' +
+        '<span class="m-desc">' + t[2] + '</span>';
+      list.appendChild(row);
+    });
+
+    document.querySelectorAll(".copy-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var block = btn.closest(".code");
+        var text = block.getAttribute("data-copy") || block.innerText;
+        var done = function () {
+          var prev = btn.textContent;
+          btn.textContent = "copied";
+          btn.classList.add("copied");
+          setTimeout(function () {
+            btn.textContent = prev;
+            btn.classList.remove("copied");
+          }, 1400);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(function () {
+            fallbackCopy(text);
+            done();
+          });
+        } else {
+          fallbackCopy(text);
+          done();
+        }
+      });
+    });
+
+    function fallbackCopy(text) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  })();
+</script>
