@@ -1,6 +1,6 @@
 # QAForge MCP
 
-The world's first all-in-one QA engineering MCP server — 12 QA tools for Claude Code, in one place.
+An all-in-one QA engineering MCP server — 12 QA tools for Claude Code, in one place.
 
 Generate test cases, run security scans, detect flaky tests, diff browsers, check accessibility, baseline performance, and more — all from natural language, inside Claude.
 
