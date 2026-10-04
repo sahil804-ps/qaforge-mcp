@@ -20,7 +20,7 @@ from .tools import (
 mcp = FastMCP(
     name="QAForge MCP",
     instructions=(
-        "QAForge MCP is the world's first all-in-one QA engineering MCP server. "
+        "QAForge MCP is an all-in-one QA engineering MCP server. "
         "It provides 12 specialized QA tools covering test generation, security testing, "
         "flaky test detection, cross-browser diffing, accessibility audits, performance baselines, "
         "bug reporting, regression impact analysis, and more. "
