@@ -1,10 +1,20 @@
 import json
 import re
-from typing import Optional
 import anthropic
 from ._ai_utils import parse_json_response
 from ..config import config
 from ..request_config import get_anthropic_api_key, ai_configured
+
+_TEST_FILE_RE = re.compile(
+    r"(^|/)(tests?|specs?|__tests__|__mocks__|mocks?)/"
+    r"|(^|/)test_[^/]+$"
+    r"|_test\.[^/]+$"
+    r"|\.(test|spec)\.[^/]+$"
+)
+
+
+def _is_test_file(path: str) -> bool:
+    return bool(_TEST_FILE_RE.search(path.lower().replace("\\", "/")))
 
 
 def _extract_changed_files(git_diff: str) -> list[dict]:
@@ -63,10 +73,10 @@ async def run(
             risk_reasons.append(f"High-risk module: {', '.join(matched)}")
 
         if f.get("additions", 0) + f.get("deletions", 0) > 100:
-            risk = "high" if risk != "high" else risk
+            risk = "high"
             risk_reasons.append(f"Large change: +{f['additions']}/-{f['deletions']} lines")
 
-        if any(p in path_lower for p in ["test", "spec", "mock"]):
+        if _is_test_file(f["path"]):
             risk = "low"
             risk_reasons = ["Test file — usually lower impact"]
 
@@ -118,16 +128,14 @@ Analyze which test areas are impacted and respond with JSON:
             messages=[{"role": "user", "content": prompt}],
         )
         raw = msg.content[0].text.strip()
-        try:
-            ai_analysis, _ = parse_json_response(raw)
-            if ai_analysis is None:
-                raise ValueError("no JSON")
+        ai_analysis, _ = parse_json_response(raw)
+        if isinstance(ai_analysis, dict):
             result["impact_analysis"] = ai_analysis
             result["must_run_before_merge"] = [
                 area for area in ai_analysis.get("impacted_test_areas", [])
-                if area.get("must_run_before_merge")
+                if isinstance(area, dict) and area.get("must_run_before_merge")
             ]
-        except json.JSONDecodeError:
+        else:
             result["impact_analysis_raw"] = raw
     else:
         result["impact_analysis"] = {
