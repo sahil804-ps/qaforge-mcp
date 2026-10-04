@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "qaforge-mcp"
-version = "1.0.0"
-description = "The World's First All-in-One QA MCP Server — 12 QA tools for Claude Code"
+version = "1.0.1"
+description = "All-in-one QA engineering MCP server — 12 QA tools for Claude Code"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
@@ -14,6 +14,7 @@ keywords = ["mcp", "qa", "testing", "playwright", "jira", "security", "k6"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Testing",
 ]
 
@@ -27,8 +28,14 @@ dependencies = [
     "python-dotenv>=1.0.0",
 ]
 
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
 [project.scripts]
 qaforge-mcp = "qaforge_mcp.__main__:main"
 
-[tool.hatch.build.targets.wheel]
-packages = ["qaforge_mcp"]
+[tool.setuptools.packages.find]
+include = ["qaforge_mcp*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
